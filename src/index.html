@@ -30,42 +30,65 @@
 <body>
     <div class="content">
         <div class="btn test1">
-            仅仅是一个弹出
+            无参数，显示loading
         </div>
-        <div class="btn">
+        <div class="btn test2">
             弹出内容
         </div>
-       <div class="btn">
-            弹出内容，自动关闭，回调
+        <div class="btn test3">
+            有遮罩
+        </div>
+        <div class="btn test4">
+            弹出内容，2秒自动关闭
+        </div>
+        <div class="btn test">
+            弹出内容，关闭后有回调函数
         </div>
     </div>
-<!--     <div class="ui-dialog ui-popup-show">
-        <div class="ui-dialog-header">
-            标题
+<!--         <div class="ui-dialog ui-popup-show">
+            <div class="ui-dialog-header">
+                标题
+            </div>
+            <div class="ui-dialog-content">
+                内容
+            </div>
+            <div class="ui-dialog-btns">
+                <div class="ui-dialog-button btn-cancel">取消</div>
+                <div class="ui-dialog-button btn-confirm">确定</div>
+            </div>
         </div>
-        <div class="ui-dialog-content">
-            内容
-        </div>
-        <div class="ui-dialog-content-btns">
-            确定
-        </div>
-    </div> -->
+        <div class="ui-dialog-mask">
+        </div> -->
 
     <script type="text/javascript">
         let btn1 = document.querySelector('.test1')
-
-        // btn1.onclick = function(){
-        //     let o = new Dialog({
-        //         width: 500,
-        //         title: '标题',
-        //         content: '内容',
-        //         hasMask: true
-        //     })
-        // }
+        let btn2 = document.querySelector('.test2')
+        let btn3 = document.querySelector('.test3')
+        let btn4 = document.querySelector('.test4')
 
         btn1.onclick = function(){
             let o = new Dialog()
         }
+
+        btn2.onclick = function(){
+            let oo = new Dialog('我是一个警告')
+        }
+
+        btn3.onclick = function(){
+            let ooo = new Dialog({
+                content: '这里有个遮罩',
+                showMask: true
+            })
+        }
+
+        btn4.onclick = function(){
+             let oooo = new Dialog({
+                content: '2秒后被关闭',
+                showMask: true,
+                delay: 2000
+            })
+        }
+
     </script>
 </body>
 </html>
