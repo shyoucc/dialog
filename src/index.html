@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>dialog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+
+    <link rel="stylesheet" type="text/css" href="./dialog.css">
+    <script type="text/javascript" src="./dialog.js"></script>
+
+    <style type="text/css">
+        .content {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .btn {
+            background: #41AFF2;
+            color: #fff;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="btn test1">
+            仅仅是一个弹出
+        </div>
+        <div class="btn">
+            弹出内容
+        </div>
+       <div class="btn">
+            弹出内容，自动关闭，回调
+        </div>
+    </div>
+<!--     <div class="ui-dialog ui-popup-show">
+        <div class="ui-dialog-header">
+            标题
+        </div>
+        <div class="ui-dialog-content">
+            内容
+        </div>
+        <div class="ui-dialog-content-btns">
+            确定
+        </div>
+    </div> -->
+
+    <script type="text/javascript">
+        let btn1 = document.querySelector('.test1')
+
+        // btn1.onclick = function(){
+        //     let o = new Dialog({
+        //         width: 500,
+        //         title: '标题',
+        //         content: '内容',
+        //         hasMask: true
+        //     })
+        // }
+
+        btn1.onclick = function(){
+            let o = new Dialog()
+        }
+    </script>
+</body>
+</html>
