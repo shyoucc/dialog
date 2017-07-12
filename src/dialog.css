@@ -43,8 +43,18 @@ html, body {
     color: #b7b7b7;
 }
 
+.ui-dialog-header.error {
+    background: #f3751b;
+    color: #fff;
+}
+
+.ui-dialog-header.success {
+    background: #26ab27;
+    color: #fff;
+}
+
 .ui-dialog-content {
-    padding: 7px 0;
+    padding: 7px;
     display: flex;
     justify-content: center;
     min-height: 10vh;
@@ -59,6 +69,8 @@ html, body {
     text-align: center;
     height: 34px;
     line-height: 34px;
+    color: #b7b7b7;
+
 }
 
 .ui-dialog-btns:after {
@@ -112,11 +124,11 @@ html, body {
   -webkit-animation: lds-spinner linear 1s infinite;
   animation: lds-spinner linear 1s infinite;
   background: #41AFF2;
-  width: 2px;
-  height: 6px;
+  width: 3px;
+  height: 7px;
   border-radius: 20%;
   -webkit-transform-origin: 2px 12px;
-  transform-origin: 2px 12px;
+  transform-origin: 3px 18px;
 }
 .lds-spinner div:nth-child(1) {
   -webkit-transform: rotate(0deg);

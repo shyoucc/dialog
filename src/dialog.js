@@ -26,18 +26,17 @@
             this.opts = Object.assign({}, originalOptions)
 
             // 如果已经有弹窗，就返回
-            // if (document.getElementsByClassName('ui-dialog').length !== 0) {
-            //     return;
-            // };
+            if (document.getElementsByClassName('ui-dialog').length !== 0) {
+                return;
+            };
 
-            // dom初始化 并且监听
+            // dom初始化
             this._init()
             // 创建弹窗单列
             let one = this._getSingle(this._create)
             this.wrapperOne = one()
+            // 渲染dom
             append(this.body, this.wrapperOne)
-
-            // this._on()
 
         }
 
@@ -76,7 +75,10 @@
             if (Object.keys(that.opts).length === 0) {
                 append(content, spinner)
                 append(wrapper, content)
+                append(wrapper, btns)
+                btns.innerHTML = '请稍后'
             }
+
 
             // 传入字符串，内容
             if (that.opts.content) {
@@ -89,31 +91,47 @@
 
                // confirm 回调
                btn_confirm.onclick = function(){
-                 that._remove()
+                 that.remove()
                  if (that.opts.confirmCallback && isFunction(that.opts.confirmCallback)) {
                     that.opts.confirmCallback()
                  }
                }
+            }
 
+            // 传入type
+            if (that.opts.type) {
+                switch (that.opts.type){
+                    case 'success': {
+                        addClass(header, 'success')
+                        break
+                    }
+                    case 'error': {
+                        addClass(header, 'error')
+                        break
+                    }
+                }
             }
 
             // 有遮罩
             if (that.opts.showMask) {
                append(that.body, mask)
+               mask.onclick = function(){
+                  that.remove()
+                }
             }
 
             // 有取消按钮
             if (that.opts.showCancel) {
                 append(btns, btn_cancel)
                 btn_cancel.onclick = function(){
-                    that._remove()
+                    that.remove()
                 }
             }
 
             // 延时关闭
             if (that.opts.delay) {
                 setTimeout(() => {
-                    that._remove()
+                    that.remove()
                     // 执行返回函数
                     if (that.opts.delayCallback && isFunction(that.opts.delayCallback)) {
                         that.opts.delayCallback()
@@ -126,19 +144,7 @@
 
         }
 
-        // _prototype._on = function(){
-        //     let that = this
-
-        //     // 只要传参数，就监听关闭时间
-        //     if (Object.keys(that.opts).length !== 0) {
-        //         on(that.$('.ui-dialog-button'), 'click', function(e){
-        //             that._remove()
-        //             e.stopPropagation()
-        //         })
-        //     }
-        // }
-
-        _prototype._remove = function(){
+        _prototype.remove = function(){
             let that = this
 
             if (this.wrapperOne.parentNode) {
@@ -149,7 +155,6 @@
                     this.body.removeChild(this.$('.ui-dialog-mask'))
                 }
             }
-            // this.body.removeChild(this.wrapperOne)
         }
 
         _prototype._getSingle = function(fn){
@@ -164,11 +169,8 @@
             return document.querySelector(element)
         }
 
-        function on(element, eventType, fn) {
-            element.addEventListener(eventType, e => {
-              let el = e.target
-              el && fn.call(el, e, el)
-            },  {once: true})
+        function addClass(element, className) {
+            element.classList.add(className)
             return element
         }
 
