@@ -1,7 +1,7 @@
 /**
  * @author zhixie
  *
- * @modified 2016-7-11
+ * @modified 2016-7-12
  */
 
 (function(root, factory){
@@ -26,104 +26,161 @@
             this.opts = Object.assign({}, originalOptions)
 
             // 如果已经有弹窗，就返回
-            if (document.getElementsByClassName('ui-dialog').length !== 0) {
-                return;
-            };
-            this.create()
+            // if (document.getElementsByClassName('ui-dialog').length !== 0) {
+            //     return;
+            // };
+
+            // dom初始化 并且监听
+            this._init()
+            // 创建弹窗单列
+            let one = this._getSingle(this._create)
+            this.wrapperOne = one()
+            append(this.body, this.wrapperOne)
+
+            // this._on()
 
         }
 
         let _prototype = Dialog.prototype
 
-        _prototype.create = function(){
+        _prototype._init = function(){
+            // 字符串模板
+            this.body = this.$('body')
+
+            this.tmp_wrapper = '<div class="ui-dialog ui-popup-show"></div>'
+            this.tmp_mask = '<div class="ui-dialog-mask"></div>'
+            this.tmp_header = '<div class="ui-dialog-header"></div>'
+            this.tmp_content = '<div class="ui-dialog-content"></div>'
+            this.tmp_btns = '<div class="ui-dialog-btns"></div>'
+
+            this.tmp_spinner = '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+            this.tmp_cancel = '<div class="ui-dialog-button btn-cancel">取消</div>'
+            this.tmp_confirm = '<div class="ui-dialog-button btn-confirm">确定</div>'
+
+            return this
+        }
+
+        _prototype._create = function(){
             let that = this
 
-            // 字符串模板
-            let body = $('body')
-            let tmp_wrapper = '<div class="ui-dialog ui-popup-show"><div class="ui-dialog-header"></div><div class="ui-dialog-content"></div><div class="ui-dialog-btns"></div></div>'
-            let tmp_spinner = '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
-            let tmp_confirm = '<div class="ui-dialog-button btn-confirm">确定</div>'
-            let tmp_mask = '<div class="ui-dialog-mask"></div>'
-
-            let wrapper = parseToDOM(tmp_wrapper)
-            append(body, wrapper)
-
-            let tmp_header = $('.ui-dialog-header')
-            let tmp_content = $('.ui-dialog-content')
-            let tem_btns = $('.ui-dialog-btns')
+            let wrapper = parseToDOM(this.tmp_wrapper)
+            let mask = parseToDOM(this.tmp_mask)
+            let header = parseToDOM(this.tmp_header)
+            let content = parseToDOM(this.tmp_content)
+            let btns = parseToDOM(this.tmp_btns)
+            let btn_confirm = parseToDOM(this.tmp_confirm)
+            let btn_cancel = parseToDOM(this.tmp_cancel)
+            let spinner = parseToDOM(this.tmp_spinner)
 
             // 如果什么都没传的话
             if (Object.keys(that.opts).length === 0) {
-                append(tmp_content, parseToDOM(tmp_spinner))
-                hide(tmp_header)
-                hide(tem_btns)
+                append(content, spinner)
+                append(wrapper, content)
             }
 
             // 传入字符串，内容
             if (that.opts.content) {
-               tmp_header.innerHTML = '提示'
-               tmp_content.innerHTML = that.opts.content
-               append(tem_btns, parseToDOM(tmp_confirm))
+               header.innerHTML = that.opts.title || '提示'
+               content.innerHTML = that.opts.content
+               append(btns, btn_confirm)
+               append(wrapper, header)
+               append(wrapper, content)
+               append(wrapper, btns)
+
+               // confirm 回调
+               btn_confirm.onclick = function(){
+                 that._remove()
+                 if (that.opts.confirmCallback && isFunction(that.opts.confirmCallback)) {
+                    that.opts.confirmCallback()
+                 }
+               }
+
             }
 
             // 有遮罩
             if (that.opts.showMask) {
-               append(body, parseToDOM(tmp_mask))
+               append(that.body, mask)
             }
 
+            // 有取消按钮
+            if (that.opts.showCancel) {
+                append(btns, btn_cancel)
+                btn_cancel.onclick = function(){
+                    that._remove()
+                }
+            }
+
+            // 延时关闭
             if (that.opts.delay) {
                 setTimeout(() => {
-                    that.remove()
+                    that._remove()
+                    // 执行返回函数
+                    if (that.opts.delayCallback && isFunction(that.opts.delayCallback)) {
+                        that.opts.delayCallback()
+                    }
                 }, that.opts.delay)
             }
 
-            // 只要传参数，就监听关闭时间
-            if (Object.keys(that.opts).length !== 0) {
-                on($('.ui-dialog-button'), 'click', function(){
-                    that.remove()
-                })
+            // 返回dom主体
+            return wrapper
+
+        }
+
+        // _prototype._on = function(){
+        //     let that = this
+
+        //     // 只要传参数，就监听关闭时间
+        //     if (Object.keys(that.opts).length !== 0) {
+        //         on(that.$('.ui-dialog-button'), 'click', function(e){
+        //             that._remove()
+        //             e.stopPropagation()
+        //         })
+        //     }
+        // }
+
+        _prototype._remove = function(){
+            let that = this
+
+            if (this.wrapperOne.parentNode) {
+                this.wrapperOne.parentNode.removeChild(this.wrapperOne);
+
+                // 遮罩处理
+                if (document.getElementsByClassName('ui-dialog-mask').length !== 0) {
+                    this.body.removeChild(this.$('.ui-dialog-mask'))
+                }
+            }
+            // this.body.removeChild(this.wrapperOne)
+        }
+
+        _prototype._getSingle = function(fn){
+            let that = this
+            let result = null
+            return function(){
+                return result || (result = fn.apply(that, arguments))
             }
         }
 
-        _prototype.remove = function(){
-            removeElement()
+        _prototype.$ = function(element){
+            return document.querySelector(element)
         }
 
         function on(element, eventType, fn) {
             element.addEventListener(eventType, e => {
               let el = e.target
               el && fn.call(el, e, el)
-            })
+            },  {once: true})
             return element
         }
 
-        function $(element){
-            return document.querySelector(element)
-        }
-
-        function removeElement(element){
-            $('body').removeChild($('.ui-dialog'))
-            if (document.getElementsByClassName('ui-dialog-mask').length !== 0) {
-                 $('body').removeChild($('.ui-dialog-mask'))
-                return;
-            };
-        }
-
-        function hide(element){
-            return element.style.display = 'none'
+        function isFunction(fun){
+            return toString.call(fun) === '[object Function]'
         }
 
         function parseToDOM(str){
-           var div = document.createElement("div");
-           if(typeof str == "string")
-               div.innerHTML = str;
-           return div.childNodes;
-        }
-
-        function removeChildren(element) {
-            while (element.hasChildNodes()) {
-              element.removeChild(element.lastChild)
-            }
+            var template = document.createElement('template')
+            template.innerHTML = str.trim()
+            let node = template.content.firstChild
+            return node
         }
 
         function append(parent, children) {

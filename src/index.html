@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>dialog</title>
+    <title>dialog展示</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
 
@@ -29,66 +29,85 @@
 </head>
 <body>
     <div class="content">
-        <div class="btn test1">
+        <div class="btn">
             无参数，显示loading
         </div>
-        <div class="btn test2">
+        <div class="btn">
             弹出内容
         </div>
-        <div class="btn test3">
+        <div class="btn">
             有遮罩
         </div>
-        <div class="btn test4">
+        <div class="btn">
             弹出内容，2秒自动关闭
         </div>
-        <div class="btn test">
+        <div class="btn">
             弹出内容，关闭后有回调函数
         </div>
-    </div>
-<!--         <div class="ui-dialog ui-popup-show">
-            <div class="ui-dialog-header">
-                标题
-            </div>
-            <div class="ui-dialog-content">
-                内容
-            </div>
-            <div class="ui-dialog-btns">
-                <div class="ui-dialog-button btn-cancel">取消</div>
-                <div class="ui-dialog-button btn-confirm">确定</div>
-            </div>
+        <div class="btn">
+            弹出内容，显示取消按钮
         </div>
-        <div class="ui-dialog-mask">
-        </div> -->
+        <div class="btn">
+            弹出内容，confirm回调
+        </div>
+    </div>
 
     <script type="text/javascript">
-        let btn1 = document.querySelector('.test1')
-        let btn2 = document.querySelector('.test2')
-        let btn3 = document.querySelector('.test3')
-        let btn4 = document.querySelector('.test4')
 
-        btn1.onclick = function(){
+        let len = document.querySelectorAll('.btn')
+
+        len[0].onclick = function(){
             let o = new Dialog()
         }
 
-        btn2.onclick = function(){
-            let oo = new Dialog('我是一个警告')
+        len[1].onclick = function(){
+            let o = new Dialog('我是一个警告')
         }
 
-        btn3.onclick = function(){
-            let ooo = new Dialog({
+        len[2].onclick = function(){
+            let o = new Dialog({
                 content: '这里有个遮罩',
                 showMask: true
             })
         }
 
-        btn4.onclick = function(){
-             let oooo = new Dialog({
+        len[3].onclick = function(){
+             let o = new Dialog({
                 content: '2秒后被关闭',
-                showMask: true,
-                delay: 2000
+                delay: 2000,
+                title: '我是标题'
             })
         }
 
+        len[4].onclick = function(){
+             let o = new Dialog({
+                content: '2秒后被关闭, 并且执行函数',
+                delay: 2000,
+                showMask: true,
+                delayCallback: function(){
+                   alert('我被调用了')
+                }
+            })
+        }
+
+        len[5].onclick = function(){
+             let o = new Dialog({
+                title: '警告',
+                content: '服务器报了一个错误',
+                showCancel: true
+            })
+        }
+
+        len[6].onclick = function(){
+             let o = new Dialog({
+                title: '提示',
+                content: '确定后有回调',
+                showCancel: true,
+                confirmCallback: function(){
+                    alert('你按了confirm')
+                }
+            })
+        }
     </script>
 </body>
 </html>
