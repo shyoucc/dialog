@@ -28,7 +28,7 @@
             // 如果已经有弹窗，就返回
             if (document.getElementsByClassName('ui-dialog').length !== 0) {
                 return;
-            };
+            }
 
             // dom初始化
             this._init()
@@ -71,18 +71,21 @@
             let btn_cancel = parseToDOM(this.tmp_cancel)
             let spinner = parseToDOM(this.tmp_spinner)
 
+            const BTNS_STR = '请稍后'
+            const HEADER_SRT = '提示'
+
             // 如果什么都没传的话
             if (Object.keys(that.opts).length === 0) {
                 append(content, spinner)
                 append(wrapper, content)
                 append(wrapper, btns)
-                btns.innerHTML = '请稍后'
+                btns.innerHTML = BTNS_STR
             }
 
 
             // 传入字符串，内容
             if (that.opts.content) {
-               header.innerHTML = that.opts.title || '提示'
+               header.innerHTML = that.opts.title || HEADER_SRT
                content.innerHTML = that.opts.content
                append(btns, btn_confirm)
                append(wrapper, header)
