@@ -178,7 +178,7 @@
         }
 
         function isFunction(fun){
-            return toString.call(fun) === '[object Function]'
+            return Array.toString.call(fun) === '[object Function]'
         }
 
         function parseToDOM(str){
